@@ -1,4 +1,4 @@
-# Angular Virtual Scroll & Validation Demo
+# Angular CDK Scroll
 
 10,000件の商品データを扱う、Angularのフロントエンド実装デモです。
 
@@ -109,7 +109,7 @@ Reactive Forms ── カスタムValidator
 ## ファイル構成
 
 ```text
-angular-virtual-scroll-validation-demo/
+Angular-cdk-scroll/
 ├── src/
 │   ├── app/
 │   │   ├── components/
@@ -305,11 +305,11 @@ C:\Program Files\nodejs
 
 ```bat
 cd %USERPROFILE%\Documents
-git clone https://github.com/hamchese86/Angular-knowledge.git
-cd Angular-knowledge
+git clone https://github.com/hamchese86/Angular-cdk-scroll.git
+cd Angular-cdk-scroll
 ```
 
-`cd Angular-knowledge`を実行した後のフォルダーが、このプロジェクトのルートフォルダーです。以降のインストール、開発サーバー、ビルド、単体テストのコマンドは、すべてこのフォルダーで実行します。
+`cd Angular-cdk-scroll`を実行した後のフォルダーが、このプロジェクトのルートフォルダーです。以降のインストール、開発サーバー、ビルド、単体テストのコマンドは、すべてこのフォルダーで実行します。
 
 ### インストール
 
