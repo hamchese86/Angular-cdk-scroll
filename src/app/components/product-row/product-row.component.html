@@ -1,0 +1,31 @@
+<!-- 1件分の商品情報のコンテンツ -->
+<article class="product-row">
+  <!-- サムネイル -->
+  <app-product-thumbnail [product]="product"></app-product-thumbnail>
+  <!-- 商品の基本情報 -->
+  <div class="identity">
+    <span class="category">{{ product.category }}</span>
+    <h3>{{ product.name }}</h3>
+    <span class="sku">{{ product.id }}</span>
+  </div>
+  <!-- 商品価格 -->
+  <div class="metric">
+    <span>価格</span>
+    <strong>{{ yen.format(product.price) }}</strong>
+  </div>
+  <!-- 評価 -->
+  <div class="metric">
+    <span>評価</span>
+    <strong>★ {{ product.rating | number: "1.1-1" }}</strong>
+  </div>
+  <!-- 在庫 -->
+  <div class="metric">
+    <span>在庫</span>
+    <strong [class.out]="product.stock === 0">{{ product.stock || "なし" }}</strong>
+  </div>
+  <!-- 発売日 -->
+  <div class="metric">
+    <span>発売日</span>
+    <time [attr.datetime]="product.releaseDate">{{ product.releaseDate }}</time>
+  </div>
+</article>

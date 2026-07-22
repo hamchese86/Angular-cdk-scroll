@@ -1,0 +1,80 @@
+:host {
+    display: block;
+    height: 112px;
+}
+
+.product-row {
+    box-sizing: border-box; // paddingとborderを高さ・幅の計算に含める
+    display: grid;
+    grid-template-columns: // 画像、商品名、3つの指標、日付の6列で構成
+        130px
+        minmax(210px, 1fr)
+        repeat(3, 95px)
+        110px;
+    gap: 18px;
+    align-items: center;
+    height: 104px;
+    margin-bottom: 8px;
+    padding: 12px;
+    border: 1px solid #e6e6ee;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.identity {
+    min-width: 0;
+}
+
+h3 {
+    margin: 4px 0;
+    overflow: hidden;
+    font-size: 18px;
+    text-overflow: ellipsis; // 長い商品名を1行に収め、末尾を「…」で省略
+    white-space: nowrap;
+}
+
+.category {
+    color: #6d5dfc;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.sku,
+time,
+.metric span {
+    color: #777785;
+    font-size: 16px;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.metric strong {
+    font-size: 14px;
+}
+
+// 在庫切れなどの注意情報を赤色で表示
+.out {
+    color: #d33d53;
+}
+
+@media (max-width: 820px) {
+    .product-row {
+        // 狭い画面では画像・商品情報・指標の3列に変更
+        grid-template-columns:
+            130px
+            minmax(180px, 1fr)
+            90px;
+    }
+
+    // 3つ目以降の指標と日付を非表示にして横幅を確保
+    .metric:nth-of-type(n + 3),
+    time {
+        display: none;
+    }
+}

@@ -1,0 +1,68 @@
+:host {
+    display: block;
+    width: 130px;
+    height: 80px;
+}
+
+.thumbnail {
+    position: relative;
+    display: block;
+    width: 130px;
+    height: 80px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 12px;
+    background: #e8e8ef;
+    cursor: pointer;
+}
+
+.thumbnail:focus-visible {
+    outline: 3px solid #6d5dfc;
+    outline-offset: 3px;
+}
+
+.thumbnail img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.view-count {
+    position: absolute;
+    right: 6px;
+    bottom: 5px;
+    padding: 2px 6px;
+    border-radius: 9px;
+    background: rgba(15, 16, 28, .72);
+    color: white;
+    font-size: 10px;
+}
+
+// 画像の読み込み中に表示する回転アイコン
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, .4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+}
+
+// スピナーを0度から360度まで回転させる
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,173 @@
+<!--ヘッダーエリア-->
+<header class="header">
+  <!-- タイトル -->
+  <div class="header-text">
+    <span class="eyebrow">ANGULAR ENGINEERING</span>
+    <h1>Product Explorer</h1>
+    <p>10,000件の商品を軽快に探索。仮想スクロール、安定したDOM追跡、遅延画像、相関バリデーションを一画面で検証できます。</p>
+  </div>
+  <!-- サークル ※aria-hidden=""true"で横幅縮小時に非表示となる -->
+  <div class="header-circle" aria-hidden="true">
+    <span>10K</span>
+    <small>PRODUCTS</small>
+  </div>
+</header>
+
+<!--コンテンツエリア-->
+<main>
+  <section class="feature-list" aria-label="実装技術一覧">
+    <!-- strongは太字、spanは通常の太さで表示される -->
+    <div>
+      <strong>Virtual Scroll</strong>
+      <span>表示範囲のみDOM化</span>
+    </div>
+    <div>
+      <strong>Stable trackBy</strong>
+      <span>商品IDで要素を追跡</span>
+    </div>
+    <div>
+      <strong>Lazy Preview</strong>
+      <span>ホバー時に画像取得</span>
+    </div>
+    <div>
+      <strong>Cross-field Validation</strong>
+      <span>価格と日付の相関検証</span>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <!--検索条件指定エリア-->
+    <aside class="filter"> <!-- aside：メインコンテンツを補助する領域 -->
+      <!-- タイトル & ボタン -->
+      <div class="filter-head">
+        <span>FILTERS</span>
+        <button type="button" class="text-button" (click)="clearFilters()">クリア</button>
+      </div>
+      <!-- 検索条件フォーム -->
+      <form [formGroup]="form"> <!-- HTMLフォームとTypeScript側のFormGroupを関連付ける -->
+        <label>
+          キーワード
+          <input type="search" formControlName="query" placeholder="商品名または商品ID"/>
+        </label>
+        <label>
+          カテゴリ
+          <select formControlName="category">
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+          </select>
+        </label>
+        <fieldset> <!-- 関連する入力項目を1つのグループとする -->
+          <!-- データ入力欄 -->
+          <legend>価格帯</legend> <!-- fieldset内の見出し -->
+          <div class="range">
+            <input type="number" formControlName="minPrice" placeholder="最低"/>
+            <span>—</span>
+            <input type="number" formControlName="maxPrice" placeholder="最高"/>
+          </div>
+          <!-- エラーテキスト１ -->
+          <p class="error" *ngIf="form.controls.minPrice.hasError('nonNegativePrice') || form.controls.maxPrice.hasError('nonNegativePrice')">
+            価格は0以上で入力してください
+          </p>
+          <!-- エラーテキスト２ -->
+          <p class="error" *ngIf="form.hasError('priceRange')">
+            最低価格は最高価格以下にしてください
+          </p>
+        </fieldset>
+        <fieldset> <!-- 関連する入力項目を1つのグループとする -->
+          <!-- データ入力欄 -->
+          <legend>発売期間</legend> <!-- fieldset内の見出し -->
+          <label class="compact">
+            開始日<input type="date" formControlName="availableFrom"/>
+          </label>
+          <label class="compact">
+            終了日<input type="date" formControlName="availableTo"/>
+          </label>
+          <!-- エラーテキスト -->
+          <p class="error" *ngIf="form.hasError('dateRange')">
+            開始日は終了日以前にしてください
+          </p>
+        </fieldset>
+      </form>
+      <div class="tip">
+        <strong>画像の動作</strong>
+        <p>
+          商品画像にマウスを重ねると、遅延ロード後に3つのビューが切り替わります。<br>
+          取得結果はサービスでキャッシュされます。
+        </p>
+      </div>
+    </aside>
+
+    <!--データ表示エリア-->
+    <section class="results">
+      <!-- タイトルと表示切替ボタン -->
+      <div class="results-head">
+        <div>
+          <span class="eyebrow">RESULTS</span>
+          <h2>{{ filteredProducts.length | number }} products</h2>
+        </div>
+        <div class="mode-switch" role="group" aria-label="描画方式">
+          <button type="button" [class.active]="mode === 'virtual'" (click)="setMode('virtual')">仮想スクロール</button>
+          <button type="button" [class.active]="mode === 'standard'" (click)="setMode('standard')">通常描画</button>
+        </div>
+      </div>
+
+      <!-- データメトリクス -->
+      <div class="metrics">
+        <div>
+          <span>データ件数</span>
+          <strong>{{ filteredProducts.length | number }}</strong>
+        </div>
+        <div>
+          <span>描画DOM行数</span>
+          <strong>{{ renderedCount }}</strong>
+        </div>
+        <div>
+          <span>フィルター処理</span>
+          <strong>{{ filterDuration | number: "1.1-2" }} ms</strong>
+        </div>
+        <div>
+          <span>追跡キー</span>
+          <strong>product.id</strong>
+        </div>
+      </div>
+
+      <!-- 注意・案内メッセージ -->
+      <p class="notice" *ngIf="mode === 'standard' && filteredProducts.length > standardLimit">
+        ブラウザの停止を避けるため、通常描画は先頭{{ standardLimit }}件に制限しています。仮想スクロールは全件を扱います。
+      </p>
+
+      <!-- 仮想スクロール描画 ※modeによって仮想スクロールか通常描画を切り替える -->
+      <cdk-virtual-scroll-viewport
+        *ngIf="mode === 'virtual'; else standardList"
+        class="viewport"
+        [itemSize]="112"
+        [minBufferPx]="448"
+        [maxBufferPx]="896"
+      >
+        <!-- trackBy実装 -->
+        <app-product-row
+          *cdkVirtualFor="let product of filteredProducts; trackBy: trackByProductId"
+          [product]="product"
+        ></app-product-row>
+      </cdk-virtual-scroll-viewport>
+
+      <!-- template作成（通常描画） -->
+      <ng-template #standardList>
+        <!-- 注意文が表示される場合は、一覧の高さを縮めるためのクラスを付与する -->
+        <div
+          class="standard-list"
+          [class.has-notice]="filteredProducts.length > standardLimit"
+        >
+          <!-- trackBy実装 -->
+          <app-product-row
+            *ngFor="let product of visibleStandardProducts;
+            trackBy: trackByProductId"
+            [product]="product">
+          </app-product-row>
+        </div>
+      </ng-template>
+    </section>
+  </section>
+</main>
+
+<!--フッターエリア-->
+<footer>Built as an independent Angular portfolio demo using generated product data.</footer>

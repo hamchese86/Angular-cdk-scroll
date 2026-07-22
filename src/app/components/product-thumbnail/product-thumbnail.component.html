@@ -1,0 +1,36 @@
+<button
+  type="button"
+  class="thumbnail"
+  (mouseenter)="startPreview()"
+  (mouseleave)="stopPreview()"
+  (focus)="load()"
+  [attr.aria-label]="product.name + 'の商品画像を表示'"
+>
+  <!-- 画像読込前は、商品カラーのプレースホルダー表示 -->
+  <span
+    class="placeholder"
+    [style.background]="product.accent"
+    *ngIf="!loaded"
+  >
+    <!-- 読込中はスピナー表示 -->
+    <span
+      class="spinner"
+      *ngIf="loading"
+    ></span>
+    <span
+     *ngIf="!loading"
+    >画像を表示</span>
+  </span>
+  <!-- 読込完了後、現在選択されている商品画像を表示 -->
+  <img
+    *ngIf="loaded"
+    [src]="images[imageIndex]"
+    [alt]="product.name"
+    width="130" height="80"
+  />
+  <!-- 現在の画像番号と画像総数を表示 -->
+  <span
+    class="view-count"
+    *ngIf="loaded"
+  >{{ imageIndex + 1 }}/{{ images.length }}</span>
+</button>
